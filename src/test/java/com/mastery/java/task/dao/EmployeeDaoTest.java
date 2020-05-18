@@ -7,34 +7,44 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeDaoTest {
 
     @Mock
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @InjectMocks
-    private EmployeeDaoImpl employeeDao;
+    EmployeeDaoImpl employeeDao;
+
+    @Value("${employee.create}")
+    private String sqlCreateEmployee;
+
+    @Value("${employee.getAllEmployees}")
+    private String sqlGetAllEmployees;
 
     @AfterEach
-    void after() {
+    public void after() {
         verifyNoMoreInteractions(namedParameterJdbcTemplate);
     }
 
@@ -42,8 +52,10 @@ public class EmployeeDaoTest {
     public void shouldCreateEmployee() {
         Employee employee = createEmployee(1);
 
-        Mockito.when(namedParameterJdbcTemplate.update(Mockito.anyString(),
-                Mockito.any(MapSqlParameterSource.class), Mockito.any(GeneratedKeyHolder.class)))
+        ReflectionTestUtils.setField(employeeDao, "sqlCreateEmployee", "create");
+
+        when(namedParameterJdbcTemplate.update(anyString(),
+                any(MapSqlParameterSource.class), any(GeneratedKeyHolder.class)))
                 .thenAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
@@ -58,6 +70,23 @@ public class EmployeeDaoTest {
         assertEquals(1, employeeDao.create(employee));
 
         verify(namedParameterJdbcTemplate).update(anyString(), any(MapSqlParameterSource.class), any(GeneratedKeyHolder.class));
+    }
+
+    @Test
+    public void shouldGetAllEmployees() {
+
+        ReflectionTestUtils.setField(employeeDao, "sqlGetAllEmployees", "get all");
+
+        when(namedParameterJdbcTemplate.query(anyString(), any(RowMapper.class)))
+                .thenReturn(Arrays.asList(createEmployee(1), createEmployee(2)));
+
+        List<Employee> employees = employeeDao.getAll();
+
+        assertNotNull(employees);
+        assertEquals(createEmployee(1), employees.get(0));
+        assertEquals(createEmployee(2), employees.get(1));
+
+        verify(namedParameterJdbcTemplate).query(anyString(), any(RowMapper.class));
     }
 
     private Employee createEmployee(long index) {

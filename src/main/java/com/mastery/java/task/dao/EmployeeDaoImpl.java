@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,16 +24,19 @@ public class EmployeeDaoImpl implements EmployeeDao {
      */
     private Logger LOGGER = LoggerFactory.getLogger(EmployeeDaoImpl.class);
 
-    /**
-     * Interface for retrieving keys, used for auto-generated keys as returned by JDBC insert statements.
-     */
-    private KeyHolder keyHolder = new GeneratedKeyHolder();
+//    /**
+//     * Interface for retrieving keys, used for auto-generated keys as returned by JDBC insert statements.
+//     */
+//    private KeyHolder keyHolder = new GeneratedKeyHolder();
 
     /**
      * SQL statement inserts a new record in the "employee" table.
      */
     @Value("${employee.create}")
-    private String sqlCreateEmployee;
+    String sqlCreateEmployee;
+
+    @Value("${employee.getAllEmployees}")
+    String sqlGetAllEmployees;
 
     /**
      * Template class with a basic set of JDBC operations.
@@ -53,13 +57,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
         mapSqlParameterSource.addValue("first_name", employee.getFirstName());
         mapSqlParameterSource.addValue("gender", employee.getGender());
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(sqlCreateEmployee, mapSqlParameterSource, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
+    /**
+     * {@inheritDoc}
+     * @return Employee list.
+     */
     @Override
     public List<Employee> getAll() {
-        return null;
+        LOGGER.debug("getAll()");
+
+
+        return jdbcTemplate.query(sqlGetAllEmployees, BeanPropertyRowMapper.newInstance(Employee.class));
     }
 
     @Override

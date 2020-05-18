@@ -1,5 +1,7 @@
 package com.mastery.java.task.dto;
 
+import java.util.Objects;
+
 public class Employee {
     private Long employeeId;
     private String firstName;
@@ -30,6 +32,21 @@ public class Employee {
     public Employee setGender(Gender gender) {
         this.gender = gender;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(employeeId, employee.employeeId) &&
+                Objects.equals(firstName, employee.firstName) &&
+                gender == employee.gender;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeId, firstName, gender);
     }
 
     @Override
