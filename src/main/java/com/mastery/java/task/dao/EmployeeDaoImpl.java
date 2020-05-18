@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import java.util.Optional;
 /**
  * EmployeeDao interface implementation.
  */
+@Repository
 public class EmployeeDaoImpl implements EmployeeDao {
 
     /**
@@ -32,7 +34,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Value("${employee.create}")
     private String sqlCreateEmployee;
 
-    @Value("${employee.getAllEmployees}")
+    @Value("${employee.getAll}")
     private String sqlGetAllEmployees;
 
     @Value("${employee.getById}")
@@ -64,7 +66,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .addValue("last_name", employee.getLastName())
                 .addValue("department_id", employee.getDepartmentId())
                 .addValue("job_title", employee.getJobTitle())
-                .addValue("gender", employee.getGender())
+                .addValue("gender", employee.getGender().toString())
                 .addValue("birthday", employee.getBirthday());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -112,7 +114,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         LOGGER.debug("update ({})", employee);
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", employee.getEmployeeId())
+                .addValue("id", employee.getId())
                 .addValue("first_name", employee.getFirstName())
                 .addValue("last_name", employee.getLastName())
                 .addValue("department_id", employee.getDepartmentId())

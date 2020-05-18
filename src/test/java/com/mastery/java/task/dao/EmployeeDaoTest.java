@@ -138,7 +138,7 @@ public class EmployeeDaoTest {
         Random random = new Random();
 
         Employee employee = new Employee();
-        employee.setEmployeeId(index);
+        employee.setId(index);
         employee.setFirstName("First " + index );
         employee.setLastName("Last " + index);
         employee.setDepartmentId(index);
