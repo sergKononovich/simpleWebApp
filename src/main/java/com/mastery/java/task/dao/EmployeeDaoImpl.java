@@ -1,7 +1,6 @@
 package com.mastery.java.task.dao;
 
 import com.mastery.java.task.dto.Employee;
-import com.sun.org.apache.bcel.internal.generic.LOOKUPSWITCH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +38,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Value("${employee.getById}")
     private String sqlGetEmployeeById;
 
+    @Value("${employee.update}")
+    private String sqlUpdateEmployee;
+
     /**
      * Template class with a basic set of JDBC operations.
      */
@@ -54,9 +56,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
     public Integer create(Employee employee) {
         LOGGER.debug("create ({})", employee);
 
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("first_name", employee.getFirstName());
-        mapSqlParameterSource.addValue("gender", employee.getGender());
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("first_name", employee.getFirstName())
+                .addValue("last_name", employee.getLastName())
+                .addValue("department_id", employee.getDepartmentId())
+                .addValue("job_title", employee.getJobTitle())
+                .addValue("gender", employee.getGender())
+                .addValue("birthday", employee.getBirthday());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -71,7 +77,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     public List<Employee> getAll() {
         LOGGER.debug("getAll()");
-
 
         return jdbcTemplate.query(sqlGetAllEmployees, BeanPropertyRowMapper.newInstance(Employee.class));
     }
@@ -94,9 +99,25 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return Optional.ofNullable(DataAccessUtils.uniqueResult(employee));
     }
 
+    /**
+     * {@inheritDoc}
+     * @param employee Employee.
+     * @return number of updated records.
+     */
     @Override
     public Integer update(Employee employee) {
-        return null;
+        LOGGER.debug("update ({})", employee);
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("id", employee.getEmployeeId())
+                .addValue("first_name", employee.getFirstName())
+                .addValue("last_name", employee.getLastName())
+                .addValue("department_id", employee.getDepartmentId())
+                .addValue("job_title", employee.getJobTitle())
+                .addValue("gender", employee.getGender())
+                .addValue("birthday", employee.getBirthday());
+
+        return jdbcTemplate.update(sqlUpdateEmployee, parameterSource);
     }
 
     @Override

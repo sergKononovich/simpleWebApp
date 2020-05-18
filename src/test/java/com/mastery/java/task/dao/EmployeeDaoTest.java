@@ -17,6 +17,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,14 +75,18 @@ public class EmployeeDaoTest {
 
         ReflectionTestUtils.setField(employeeDao, "sqlGetAllEmployees", "get all");
 
+        List<Employee> testEmployees = new ArrayList<>();
+        testEmployees.add(createEmployee(0));
+        testEmployees.add(createEmployee(1));
+
         when(namedParameterJdbcTemplate.query(anyString(), any(RowMapper.class)))
-                .thenReturn(Arrays.asList(createEmployee(1), createEmployee(2)));
+                .thenReturn(testEmployees);
 
         List<Employee> employees = employeeDao.getAll();
 
         assertNotNull(employees);
-        assertEquals(createEmployee(1), employees.get(0));
-        assertEquals(createEmployee(2), employees.get(1));
+        assertEquals(testEmployees.get(0), employees.get(0));
+        assertEquals(testEmployees.get(1), employees.get(1));
 
         verify(namedParameterJdbcTemplate).query(anyString(), any(RowMapper.class));
     }
@@ -102,10 +108,33 @@ public class EmployeeDaoTest {
         assertEquals(testEmployee, employee);
     }
 
+    @Test
+    public void shouldUpdateEmployee() {
+
+        ReflectionTestUtils.setField(employeeDao, "sqlUpdateEmployee", "update employee");
+
+        when(namedParameterJdbcTemplate.update(anyString(), any(MapSqlParameterSource.class))).thenReturn(1);
+
+        Integer numberOfUpdatedRecords = employeeDao.update(createEmployee(1));
+
+        assertNotNull(numberOfUpdatedRecords);
+        assertEquals(1, numberOfUpdatedRecords);
+    }
+
     private Employee createEmployee(long index) {
-        return new Employee()
-                .setEmployeeId(index)
-                .setFirstName("Employee " + index)
-                .setGender(Gender.MALE);
+        Random random = new Random();
+
+        Employee employee = new Employee();
+        employee.setEmployeeId(index);
+        employee.setFirstName("First " + index );
+        employee.setLastName("Last " + index);
+        employee.setDepartmentId(index);
+        employee.setGender(Gender.MALE);
+        employee.setJobTitle("Title " + index);
+        employee.setBirthday(LocalDate.of(random.nextInt(25) + 2000,
+                Month.of(random.nextInt(12) + 1),
+                random.nextInt(27) + 1));
+
+        return employee;
     }
 }
