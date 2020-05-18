@@ -121,6 +121,19 @@ public class EmployeeDaoTest {
         assertEquals(1, numberOfUpdatedRecords);
     }
 
+    @Test
+    public void shouldDeleteEmployee() {
+
+        ReflectionTestUtils.setField(employeeDao, "sqlDeleteEmployee", "delete employee");
+
+        when(namedParameterJdbcTemplate.update(anyString(), any(MapSqlParameterSource.class))).thenReturn(1);
+
+        Integer numberOfDeletedRecords = employeeDao.delete(1);
+
+        assertNotNull(numberOfDeletedRecords);
+        assertEquals(1, numberOfDeletedRecords);
+    }
+
     private Employee createEmployee(long index) {
         Random random = new Random();
 

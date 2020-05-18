@@ -41,6 +41,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Value("${employee.update}")
     private String sqlUpdateEmployee;
 
+    @Value("${employee.delete}")
+    private String sqlDeleteEmployee;
+
     /**
      * Template class with a basic set of JDBC operations.
      */
@@ -120,8 +123,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return jdbcTemplate.update(sqlUpdateEmployee, parameterSource);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param id employee id.
+     * @return number of deleted records.
+     */
     @Override
     public Integer delete(Integer id) {
-        return null;
+        LOGGER.debug("delete ({})", id);
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        return jdbcTemplate.update(sqlDeleteEmployee, parameterSource);
     }
 }
