@@ -3,6 +3,7 @@ package com.mastery.java.task.dao;
 import com.mastery.java.task.dto.Employee;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A DAO interface to handle the database operation
@@ -28,7 +29,7 @@ public interface EmployeeDao {
      * @param id employee id.
      * @return Employee.
      */
-    Employee getById(Integer id);
+    Optional<Employee> getById(Integer id);
 
     /**
      * Update employee.

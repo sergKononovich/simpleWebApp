@@ -1,10 +1,12 @@
 package com.mastery.java.task.dao;
 
 import com.mastery.java.task.dto.Employee;
+import com.sun.org.apache.bcel.internal.generic.LOOKUPSWITCH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * EmployeeDao interface implementation.
@@ -24,19 +27,17 @@ public class EmployeeDaoImpl implements EmployeeDao {
      */
     private Logger LOGGER = LoggerFactory.getLogger(EmployeeDaoImpl.class);
 
-//    /**
-//     * Interface for retrieving keys, used for auto-generated keys as returned by JDBC insert statements.
-//     */
-//    private KeyHolder keyHolder = new GeneratedKeyHolder();
-
     /**
      * SQL statement inserts a new record in the "employee" table.
      */
     @Value("${employee.create}")
-    String sqlCreateEmployee;
+    private String sqlCreateEmployee;
 
     @Value("${employee.getAllEmployees}")
-    String sqlGetAllEmployees;
+    private String sqlGetAllEmployees;
+
+    @Value("${employee.getById}")
+    private String sqlGetEmployeeById;
 
     /**
      * Template class with a basic set of JDBC operations.
@@ -75,9 +76,22 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return jdbcTemplate.query(sqlGetAllEmployees, BeanPropertyRowMapper.newInstance(Employee.class));
     }
 
+    /**
+     * {@inheritDoc}
+     * @param id employee id.
+     * @return Employee wrapped in Optional.
+     */
     @Override
-    public Employee getById(Integer id) {
-        return null;
+    public Optional<Employee> getById(Integer id) {
+        LOGGER.debug("getById ({})", id);
+
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", id);
+
+        List<Employee> employee = jdbcTemplate.query(sqlGetEmployeeById,
+                mapSqlParameterSource, BeanPropertyRowMapper.newInstance(Employee.class));
+
+        return Optional.ofNullable(DataAccessUtils.uniqueResult(employee));
     }
 
     @Override

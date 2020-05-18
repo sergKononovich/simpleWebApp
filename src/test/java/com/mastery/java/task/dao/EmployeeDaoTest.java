@@ -17,13 +17,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -89,6 +85,23 @@ public class EmployeeDaoTest {
         verify(namedParameterJdbcTemplate).query(anyString(), any(RowMapper.class));
     }
 
+    @Test
+    public void shouldGetEmployeeById() {
+
+        Employee testEmployee = createEmployee(1);
+        ReflectionTestUtils.setField(employeeDao, "sqlGetEmployeeById", "get by id");
+
+        when(namedParameterJdbcTemplate.query(anyString(), any(MapSqlParameterSource.class), any(RowMapper.class)))
+                .thenReturn(Collections.singletonList(testEmployee));
+
+        Optional<Employee> optionalEmployee = employeeDao.getById(1);
+        assertTrue(optionalEmployee.isPresent());
+
+        Employee employee = optionalEmployee.get();
+
+        assertEquals(testEmployee, employee);
+    }
+
     private Employee createEmployee(long index) {
         return new Employee()
                 .setEmployeeId(index)
@@ -96,4 +109,3 @@ public class EmployeeDaoTest {
                 .setGender(Gender.MALE);
     }
 }
-
