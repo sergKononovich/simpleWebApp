@@ -1,3 +1,5 @@
+![Java CI with Maven](https://github.com/sergKononovich/simpleWebApp/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 ### Practical task
 
 Using the provided skeleton, implement the REST service.
