@@ -16,7 +16,7 @@ public interface EmployeeDao {
      * @param employee Employee.
      * @return Employee id.
      */
-    Integer create(Employee employee);
+    Long create(Employee employee);
 
     /**
      * Get all employee from database.
@@ -29,7 +29,7 @@ public interface EmployeeDao {
      * @param id employee id.
      * @return Employee.
      */
-    Optional<Employee> getById(Integer id);
+    Optional<Employee> getById(Long id);
 
     /**
      * Update employee.
@@ -43,5 +43,5 @@ public interface EmployeeDao {
      * @param id id.
      * @return number of updated records.
      */
-    Integer delete(Integer id);
+    Integer delete(Long id);
 }

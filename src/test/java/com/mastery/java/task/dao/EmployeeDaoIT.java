@@ -32,7 +32,7 @@ public class EmployeeDaoIT {
     public void shouldCreateEmployee() {
 
         Employee testEmployee = createEmployee(1);
-        Integer id = employeeDao.create(testEmployee);
+        Long id = employeeDao.create(testEmployee);
 
         Optional<Employee> optionalEmployee = employeeDao.getById(id);
         assertTrue(optionalEmployee.isPresent());
@@ -57,6 +57,36 @@ public class EmployeeDaoIT {
         assertNotNull(employeesFromDb);
         assertEquals(testEmployees.get(0), employeesFromDb.get(0));
         assertEquals(testEmployees.get(1), employeesFromDb.get(1));
+    }
+
+    @Test
+    public void shouldUpdateEmployee() {
+        Employee testEmployee = createEmployee(1);
+        Long id = employeeDao.create(testEmployee);
+
+        testEmployee = createEmployee(2);
+        testEmployee.setId(id);
+        Integer numberOfUpdatedRecords = employeeDao.update(testEmployee);
+
+        Optional<Employee> optionalEmployee = employeeDao.getById(id);
+        assertTrue(optionalEmployee.isPresent());
+
+        Employee employeeFromDb = optionalEmployee.get();
+
+        assertEquals(testEmployee, employeeFromDb);
+    }
+
+    @Test
+    public void shouldDeleteEmployee() {
+        Employee testEmployee = createEmployee(1);
+        Long id = employeeDao.create(testEmployee);
+
+        Integer numberOfRecordsInDatabase = employeeDao.getAll().size();
+        Integer numberOfDeletedRecords = employeeDao.delete(id);
+        Integer numberOfRecordsAfterDelete = employeeDao.getAll().size();
+
+        assertEquals(numberOfRecordsInDatabase, numberOfRecordsAfterDelete + 1);
+        assertEquals(1, numberOfDeletedRecords);
     }
 
     private Employee createEmployee(long index) {

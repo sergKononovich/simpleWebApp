@@ -58,7 +58,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * @return employee id.
      */
     @Override
-    public Integer create(Employee employee) {
+    public Long create(Employee employee) {
         LOGGER.debug("create ({})", employee);
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
@@ -72,7 +72,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(sqlCreateEmployee, mapSqlParameterSource, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     /**
@@ -92,7 +92,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * @return Employee wrapped in Optional.
      */
     @Override
-    public Optional<Employee> getById(Integer id) {
+    public Optional<Employee> getById(Long id) {
         LOGGER.debug("getById ({})", id);
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -119,7 +119,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 .addValue("last_name", employee.getLastName())
                 .addValue("department_id", employee.getDepartmentId())
                 .addValue("job_title", employee.getJobTitle())
-                .addValue("gender", employee.getGender())
+                .addValue("gender", employee.getGender().name())
                 .addValue("birthday", employee.getBirthday());
 
         return jdbcTemplate.update(sqlUpdateEmployee, parameterSource);
@@ -131,7 +131,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * @return number of deleted records.
      */
     @Override
-    public Integer delete(Integer id) {
+    public Integer delete(Long id) {
         LOGGER.debug("delete ({})", id);
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()

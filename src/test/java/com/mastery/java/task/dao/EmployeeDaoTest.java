@@ -100,7 +100,7 @@ public class EmployeeDaoTest {
         when(namedParameterJdbcTemplate.query(anyString(), any(MapSqlParameterSource.class), any(RowMapper.class)))
                 .thenReturn(Collections.singletonList(testEmployee));
 
-        Optional<Employee> optionalEmployee = employeeDao.getById(1);
+        Optional<Employee> optionalEmployee = employeeDao.getById(1L);
         assertTrue(optionalEmployee.isPresent());
 
         Employee employee = optionalEmployee.get();
@@ -128,7 +128,7 @@ public class EmployeeDaoTest {
 
         when(namedParameterJdbcTemplate.update(anyString(), any(MapSqlParameterSource.class))).thenReturn(1);
 
-        Integer numberOfDeletedRecords = employeeDao.delete(1);
+        Integer numberOfDeletedRecords = employeeDao.delete(1L);
 
         assertNotNull(numberOfDeletedRecords);
         assertEquals(1, numberOfDeletedRecords);
