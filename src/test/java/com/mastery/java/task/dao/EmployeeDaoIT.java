@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -30,9 +32,9 @@ public class EmployeeDaoIT {
     public void shouldCreateEmployee() {
 
         Employee testEmployee = createEmployee(1);
-        employeeDao.create(testEmployee);
+        Integer id = employeeDao.create(testEmployee);
 
-        Optional<Employee> optionalEmployee = employeeDao.getById(1);
+        Optional<Employee> optionalEmployee = employeeDao.getById(id);
         assertTrue(optionalEmployee.isPresent());
 
         Employee employeeFromDb = optionalEmployee.get();
@@ -41,11 +43,26 @@ public class EmployeeDaoIT {
         assertEquals(testEmployee, employeeFromDb);
     }
 
+    @Test
+    public void shouldGetAllEmployees() {
+        List<Employee> testEmployees = new ArrayList<>();
+        testEmployees.add(createEmployee(1));
+        testEmployees.add(createEmployee(2));
+
+        employeeDao.create(testEmployees.get(0));
+        employeeDao.create(testEmployees.get(1));
+
+        List<Employee> employeesFromDb = employeeDao.getAll();
+
+        assertNotNull(employeesFromDb);
+        assertEquals(testEmployees.get(0), employeesFromDb.get(0));
+        assertEquals(testEmployees.get(1), employeesFromDb.get(1));
+    }
+
     private Employee createEmployee(long index) {
         Random random = new Random();
 
         Employee employee = new Employee();
-        employee.setId(index);
         employee.setFirstName("First " + index );
         employee.setLastName("Last " + index);
         employee.setDepartmentId(index);
