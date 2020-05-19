@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * EmployeeDao interface implementation.
+ * EmployeeDao interface implementation. Used Spring Jdbc to access the database.
  */
 @Repository
 public class EmployeeDaoImpl implements EmployeeDao {
