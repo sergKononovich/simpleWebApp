@@ -35,12 +35,6 @@ public class EmployeeDaoTest {
     @InjectMocks
     EmployeeDaoImpl employeeDao;
 
-    @Value("${employee.create}")
-    private String sqlCreateEmployee;
-
-    @Value("${employee.getAllEmployees}")
-    private String sqlGetAllEmployees;
-
     @AfterEach
     public void after() {
         verifyNoMoreInteractions(namedParameterJdbcTemplate);
