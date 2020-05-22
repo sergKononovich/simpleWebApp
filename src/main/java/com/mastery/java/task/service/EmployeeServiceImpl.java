@@ -2,6 +2,7 @@ package com.mastery.java.task.service;
 
 import com.mastery.java.task.dao.EmployeeDao;
 import com.mastery.java.task.dto.Employee;
+import com.mastery.java.task.service.exceptions.ThereIsNoSuchEmployeeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +57,16 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return Employee wrapped in Optional.
      */
     @Override
-    public Optional<Employee> getById(Long id) {
+    public Employee getById(Long id) {
         LOGGER.debug("getById ({})", id);
 
-        return employeeDao.getById(id);
+        Optional<Employee> optionalEmployee = employeeDao.getById(id);
+
+        if(!optionalEmployee.isPresent()){
+            throw new ThereIsNoSuchEmployeeException();
+        }
+
+        return optionalEmployee.get();
     }
 
     /**

@@ -36,13 +36,7 @@ public class EmployeeController {
     Employee getById(@PathVariable Long id) {
         LOGGER.debug("getById ({})", id);
 
-        Optional<Employee> optionalEmployee = employeeService.getById(id);
-        if(optionalEmployee.isPresent()) {
-            return optionalEmployee.get();
-        } else {
-            //Нужна обработка ситуации, когда указанного сотрудника не существует в бд.
-            return new Employee();
-        }
+        return employeeService.getById(id);
     }
 
     @PutMapping(value = "/employee")

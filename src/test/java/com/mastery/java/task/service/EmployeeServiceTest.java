@@ -69,10 +69,10 @@ public class EmployeeServiceTest {
 
         when(employeeDao.getById(anyLong())).thenReturn(Optional.of(testEmployee));
 
-        Optional<Employee> optionalEmployee = employeeService.getById(1L);
+        Employee employee = employeeService.getById(1L);
 
-        assertTrue(optionalEmployee.isPresent());
-        assertEquals(testEmployee, optionalEmployee.get());
+        assertNotNull(employee);
+        assertEquals(testEmployee, employee);
     }
 
     @Test

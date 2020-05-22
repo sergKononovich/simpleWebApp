@@ -81,7 +81,7 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetEmployeeById() throws Exception {
         Employee testEmployee = createEmployee(2);
-        when(employeeService.getById(testEmployee.getId())).thenReturn(Optional.of(testEmployee));
+        when(employeeService.getById(testEmployee.getId())).thenReturn(testEmployee);
 
         MockHttpServletResponse response = mockMvc.perform(
                 MockMvcRequestBuilders.get("/employee/" + testEmployee.getId())

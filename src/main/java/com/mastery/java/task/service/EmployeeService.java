@@ -28,7 +28,7 @@ public interface EmployeeService {
      * @param id employee id.
      * @return Employee.
      */
-    Optional<Employee> getById(Long id);
+    Employee getById(Long id);
 
     /**
      * Update employee.
