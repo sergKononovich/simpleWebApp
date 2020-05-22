@@ -17,7 +17,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping("/employee")
+    @PostMapping(value = "/employee")
     Long create(@RequestBody Employee employee) {
         LOGGER.debug("create ({})", employee);
 
@@ -25,15 +25,15 @@ public class EmployeeController {
         return employeeService.create(employee);
     }
 
-    @GetMapping("/employees")
+    @GetMapping(value = "/employees")
     List<Employee> getAll() {
         LOGGER.debug("getAll ()");
 
         return employeeService.getAll();
     }
 
-    @GetMapping("/employee/{id}")
-    Employee getById(@RequestParam Long id) {
+    @GetMapping(value = "/employee/{id}")
+    Employee getById(@PathVariable Long id) {
         LOGGER.debug("getById ({})", id);
 
         Optional<Employee> optionalEmployee = employeeService.getById(id);
@@ -45,7 +45,7 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping("/employee")
+    @PutMapping(value = "/employee")
     Integer update(@RequestBody Employee employee) {
         LOGGER.debug("update ({})", employee);
 
@@ -54,8 +54,8 @@ public class EmployeeController {
         return employeeService.update(employee);
     }
 
-    @DeleteMapping("/employee/{id}")
-    Integer delete(@RequestParam Long id) {
+    @DeleteMapping(value = "/employee/{id}")
+    Integer delete(@PathVariable Long id) {
         LOGGER.debug("delete ({})", id);
 
         //Попытка удалить несуществующего сотрудника
