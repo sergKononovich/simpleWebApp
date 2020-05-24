@@ -1,6 +1,5 @@
-package com.mastery.java.task.rest.exceptions;
+package com.mastery.java.task.exceptions;
 
-import com.mastery.java.task.service.exceptions.ThereIsNoSuchEmployeeException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -9,12 +8,21 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
+    public static final String NO_SUCH_EMPLOYEE = "There is no such employee";
+
     @ExceptionHandler(ThereIsNoSuchEmployeeException.class)
-    ResponseEntity<AwesomeException> handleThereIsNoSuchEmployeeException() {
-        return new ResponseEntity<>(new AwesomeException("There is no such employee"), HttpStatus.NOT_FOUND);
+    ResponseEntity<ErrorResponse> handleThereIsNoSuchEmployeeException(
+            ThereIsNoSuchEmployeeException ex) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse errorResponse = new ErrorResponse(NO_SUCH_EMPLOYEE, details);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @Data
