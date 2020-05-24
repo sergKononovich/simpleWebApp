@@ -6,11 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@EnableSwagger2
 public class EmployeeController {
     Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
