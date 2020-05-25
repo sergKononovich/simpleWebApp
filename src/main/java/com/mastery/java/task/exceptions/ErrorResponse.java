@@ -3,7 +3,9 @@ package com.mastery.java.task.exceptions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -17,11 +19,21 @@ public class ErrorResponse {
     /**
      * Error details.
      */
-    private List<String> details;
+    private List<String> errors;
 
-    public ErrorResponse(final String msg, final List<String> detailsList) {
+    private HttpStatus httpStatus;
+
+    public ErrorResponse(String msg, final List<String> detailsList, final HttpStatus httpStatus) {
         super();
         this.message = msg;
-        this.details = detailsList;
+        this.errors = detailsList;
+        this.httpStatus = httpStatus;
+    }
+
+    public ErrorResponse(String msg, final String details, final HttpStatus httpStatus) {
+        super();
+        this.message = msg;
+        this.errors = Collections.singletonList(details);
+        this.httpStatus = httpStatus;
     }
 }

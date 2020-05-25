@@ -5,9 +5,11 @@ import com.mastery.java.task.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,11 +21,11 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping(value = "/employee")
-    Long create(@RequestBody Employee employee) {
+    ResponseEntity<Long> create(@Valid @RequestBody Employee employee) {
         LOGGER.debug("create ({})", employee);
 
         //Проверка, нет ли нулл полей в экземпляре employee.
-        return employeeService.create(employee);
+        return ResponseEntity.ok(employeeService.create(employee));
     }
 
     @GetMapping(value = "/employees")
@@ -41,7 +43,7 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/employee")
-    Integer update(@RequestBody Employee employee) {
+    Integer update(@Valid @RequestBody Employee employee) {
         LOGGER.debug("update ({})", employee);
 
         //Тут тоже возможна ситация обновления сотрудника,
