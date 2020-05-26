@@ -18,6 +18,7 @@ import java.util.List;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String NO_SUCH_EMPLOYEE = "There is no such employee";
+    public static final String VALIDATION_ERROR = "Validation error";
 
     @ExceptionHandler(ThereIsNoSuchEmployeeException.class)
     ResponseEntity<ErrorResponse> handleThereIsNoSuchEmployeeException(ThereIsNoSuchEmployeeException ex) {
@@ -41,9 +42,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
         }
 
-        ErrorResponse errorResponse =
-                new ErrorResponse("validation error", errors, HttpStatus.BAD_REQUEST);
-        return handleExceptionInternal(
-                ex, errorResponse, headers, errorResponse.getHttpStatus(), request);
+        ErrorResponse errorResponse = new ErrorResponse(VALIDATION_ERROR, errors, HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, errorResponse, headers, errorResponse.getHttpStatus(), request);
     }
 }
