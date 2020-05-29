@@ -1,16 +1,20 @@
 package com.mastery.java.task.rest;
 
+import com.mastery.java.task.dto.ValidationEmployee;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@EnableSwagger2
 public class EmployeeController {
     Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
@@ -18,11 +22,12 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping(value = "/employee")
-    Long create(@RequestBody Employee employee) {
-        LOGGER.debug("create ({})", employee);
+    ResponseEntity<Long> create(@Valid @RequestBody ValidationEmployee validationEmployee) {
+        LOGGER.debug("create ({})", validationEmployee);
 
-        //Проверка, нет ли нулл полей в экземпляре employee.
-        return employeeService.create(employee);
+        Employee employee = new Employee(validationEmployee);
+
+        return ResponseEntity.ok(employeeService.create(employee));
     }
 
     @GetMapping(value = "/employees")
@@ -40,11 +45,11 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/employee")
-    Integer update(@RequestBody Employee employee) {
-        LOGGER.debug("update ({})", employee);
+    Integer update(@Valid @RequestBody ValidationEmployee validationEmployee) {
+        LOGGER.debug("update ({})", validationEmployee);
 
-        //Тут тоже возможна ситация обновления сотрудника,
-        // которого нет в бд или неполная информация о сотруднике в запросе.
+        Employee employee = new Employee(validationEmployee);
+
         return employeeService.update(employee);
     }
 
@@ -52,7 +57,6 @@ public class EmployeeController {
     Integer delete(@PathVariable Long id) {
         LOGGER.debug("delete ({})", id);
 
-        //Попытка удалить несуществующего сотрудника
         return employeeService.delete(id);
     }
 }

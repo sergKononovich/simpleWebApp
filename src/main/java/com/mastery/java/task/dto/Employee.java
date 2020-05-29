@@ -2,11 +2,24 @@ package com.mastery.java.task.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class Employee {
+
+    public Employee(ValidationEmployee validationEmployee){
+        this.id = validationEmployee.getId();
+        this.firstName = validationEmployee.getFirstName();
+        this.lastName = validationEmployee.getLastName();
+        this.departmentId = validationEmployee.getDepartmentId();
+        this.birthday = LocalDate.parse(validationEmployee.getBirthday());
+        this.gender = Gender.valueOf(validationEmployee.getGender());
+        this.jobTitle = validationEmployee.getJobTitle();
+    }
+
     @EqualsAndHashCode.Exclude
     private Long id;
     private String firstName;

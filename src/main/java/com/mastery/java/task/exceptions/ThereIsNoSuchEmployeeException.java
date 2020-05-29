@@ -1,4 +1,4 @@
-package com.mastery.java.task.service.exceptions;
+package com.mastery.java.task.exceptions;
 
 public class ThereIsNoSuchEmployeeException extends RuntimeException{
 }

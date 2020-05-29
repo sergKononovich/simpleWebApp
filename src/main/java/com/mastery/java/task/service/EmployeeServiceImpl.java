@@ -2,7 +2,7 @@ package com.mastery.java.task.service;
 
 import com.mastery.java.task.dao.EmployeeDao;
 import com.mastery.java.task.dto.Employee;
-import com.mastery.java.task.service.exceptions.ThereIsNoSuchEmployeeException;
+import com.mastery.java.task.exceptions.ThereIsNoSuchEmployeeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
