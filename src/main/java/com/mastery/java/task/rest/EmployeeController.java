@@ -1,5 +1,6 @@
 package com.mastery.java.task.rest;
 
+import com.mastery.java.task.dto.ValidationEmployee;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.service.EmployeeService;
 import org.slf4j.Logger;
@@ -21,10 +22,11 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping(value = "/employee")
-    ResponseEntity<Long> create(@Valid @RequestBody Employee employee) {
-        LOGGER.debug("create ({})", employee);
+    ResponseEntity<Long> create(@Valid @RequestBody ValidationEmployee validationEmployee) {
+        LOGGER.debug("create ({})", validationEmployee);
 
-        //Проверка, нет ли нулл полей в экземпляре employee.
+        Employee employee = new Employee(validationEmployee);
+
         return ResponseEntity.ok(employeeService.create(employee));
     }
 
@@ -43,11 +45,11 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/employee")
-    Integer update(@Valid @RequestBody Employee employee) {
-        LOGGER.debug("update ({})", employee);
+    Integer update(@Valid @RequestBody ValidationEmployee validationEmployee) {
+        LOGGER.debug("update ({})", validationEmployee);
 
-        //Тут тоже возможна ситация обновления сотрудника,
-        // которого нет в бд или неполная информация о сотруднике в запросе.
+        Employee employee = new Employee(validationEmployee);
+
         return employeeService.update(employee);
     }
 
@@ -55,7 +57,6 @@ public class EmployeeController {
     Integer delete(@PathVariable Long id) {
         LOGGER.debug("delete ({})", id);
 
-        //Попытка удалить несуществующего сотрудника
         return employeeService.delete(id);
     }
 }
