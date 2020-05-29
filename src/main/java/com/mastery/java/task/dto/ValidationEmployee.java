@@ -38,6 +38,6 @@ public class ValidationEmployee {
     private String gender;
 
     @NotNull(message = "birthday can't be null")
-    @ValidateDate(message = "Invalid date. Correct date format: yyyy/MM/dd")
+    @ValidateDate(message = "Invalid date. Correct date format: yyyy-MM-dd")
     private String birthday;
 }

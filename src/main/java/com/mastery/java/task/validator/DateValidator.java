@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class DateValidator implements ConstraintValidator<ValidateDate, String> {
 
-    private static final String DATE_PATTERN = "yyyy/MM/dd";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

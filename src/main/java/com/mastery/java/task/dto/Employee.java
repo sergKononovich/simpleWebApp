@@ -17,6 +17,7 @@ public class Employee {
         this.departmentId = validationEmployee.getDepartmentId();
         this.birthday = LocalDate.parse(validationEmployee.getBirthday());
         this.gender = Gender.valueOf(validationEmployee.getGender());
+        this.jobTitle = validationEmployee.getJobTitle();
     }
 
     @EqualsAndHashCode.Exclude

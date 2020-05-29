@@ -26,7 +26,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -160,7 +159,7 @@ public class EmployeeControllerTest {
         employee.setDepartmentId(index);
         employee.setGender(Gender.MALE);
         employee.setJobTitle("Title " + index);
-        employee.setBirthday(LocalDate.of(random.nextInt(25) + 2000,
+        employee.setBirthday(LocalDate.of(random.nextInt(19) + 2000,
                 Month.of(random.nextInt(12) + 1),
                 random.nextInt(27) + 1));
 
